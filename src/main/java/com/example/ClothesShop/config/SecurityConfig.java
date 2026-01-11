@@ -27,15 +27,17 @@ import java.nio.charset.StandardCharsets;
 @RequiredArgsConstructor
 public class SecurityConfig {
     private final UserDetailsService userDetailsService;
+    private final JwtDecoderConfiguration jwtDecoderConfiguration;
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorizeRequests ->
-                authorizeRequests
-                        .requestMatchers("/api/v1/account/register","/api/v1/account/login").permitAll()
-                        .anyRequest().authenticated())
-                .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()));
+                        authorizeRequests
+                                .requestMatchers("/api/v1/account/register", "/api/v1/account/login").permitAll()
+                                .anyRequest().authenticated())
+                .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwtConfigurer -> jwtConfigurer.decoder(jwtDecoderConfiguration)));
         return http.build();
     }
 
