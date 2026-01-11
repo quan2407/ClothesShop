@@ -7,14 +7,15 @@ import com.example.ClothesShop.dto.response.LoginResponse;
 import com.example.ClothesShop.service.AccountService;
 import com.example.ClothesShop.service.AuthenticationService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.*;
+
+import java.text.ParseException;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/account")
+@Slf4j
 public class AccountController {
     private final AccountService accountService;
     private final AuthenticationService authenticationService;
@@ -25,5 +26,12 @@ public class AccountController {
     @PostMapping("/login")
     public LoginResponse login(@RequestBody LoginRequest request){
         return authenticationService.login(request);
+    }
+
+    @PostMapping("/logout")
+    public void logout(@RequestHeader("Authorization") String authHeader) throws ParseException {
+        String token = authHeader.substring("Bearer ".length());
+        authenticationService.logout(token);
+log.info("token:{}",token);
     }
 }
