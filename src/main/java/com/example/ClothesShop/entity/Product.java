@@ -29,6 +29,7 @@ public class Product {
     private Instant createdDate;
     @LastModifiedDate
     private Instant lastModifiedDate;
+    private boolean inStock;
     @OneToMany(mappedBy = "product")
     private List<SKU> skus;
 

@@ -8,6 +8,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +34,7 @@ public class DataInitializer {
     }
 
     @Bean
+    @Transactional
     CommandLineRunner initData(RoleRepository roleRepo,
                                CategoryRepository categoryRepo,
                                ProductRepository productRepo,
@@ -41,16 +43,17 @@ public class DataInitializer {
                                PasswordEncoder passwordEncoder) {
         return args -> {
 
-            // 1. Init Categories nếu chưa có
+            // 1️⃣ Init Categories
             if (categoryRepo.count() == 0) {
                 List<Category> categories = new ArrayList<>();
                 for (int i = 1; i <= 10; i++) {
                     Category cat = Category.builder().name("Category " + i).build();
                     categories.add(categoryRepo.save(cat));
                 }
+                categoryRepo.flush();
             }
 
-            // 2. Init Products nếu chưa có
+            // 2️⃣ Init Products + SKUs
             if (productRepo.count() == 0) {
                 List<Category> categories = categoryRepo.findAll();
                 Random random = new Random();
@@ -64,11 +67,14 @@ public class DataInitializer {
                             .category(cat)
                             .build();
 
-                    product = productRepo.save(product);
+                    product = productRepo.saveAndFlush(product); // flush ngay để có ID
 
                     int skuCount;
-                    if (i == 1 || i == 3 || i == 4) skuCount = 1;
-                    else skuCount = random.nextInt(20) + 1;
+                    if (i == 1 || i == 3 || i == 4) {
+                        skuCount = 1;
+                    } else {
+                        skuCount = random.nextInt(20) + 1;
+                    }
 
                     List<SKU> skus = new ArrayList<>();
                     for (int j = 1; j <= skuCount; j++) {
@@ -78,16 +84,22 @@ public class DataInitializer {
                                 .clothingSize(ClothingSize.values()[random.nextInt(ClothingSize.values().length)])
                                 .status(SkuStatus.ACTIVE)
                                 .color("Color " + ((j % 5) + 1))
-                                .quantity(random.nextInt(50) + 1)
+                                .quantity(random.nextInt(50) + 1) // quantity >0
                                 .product(product)
                                 .build();
                         skus.add(sku);
                     }
                     skuRepo.saveAll(skus);
+                    skuRepo.flush();
+
+                    // 2️⃣a Update inStock
+                    boolean hasStock = skus.stream().anyMatch(sku -> sku.getQuantity() > 0);
+                    product.setInStock(hasStock);
+                    productRepo.saveAndFlush(product);
                 }
             }
 
-            // 3. Init Accounts nếu chưa có
+            // 3️⃣ Init Accounts
             if (accountRepo.count() == 0) {
                 Role staffRole = roleRepo.findByName("ROLE_STAFF").orElseThrow();
                 Role adminRole = roleRepo.findByName("ROLE_ADMIN").orElseThrow();
@@ -114,5 +126,6 @@ public class DataInitializer {
             }
         };
     }
+
 
 }
