@@ -4,7 +4,7 @@ import com.example.ClothesShop.dto.JwtInfo;
 import com.example.ClothesShop.dto.request.LoginRequest;
 import com.example.ClothesShop.dto.response.LoginResponse;
 import com.example.ClothesShop.entity.Account;
-import com.example.ClothesShop.entity.RedisToken;
+import com.example.ClothesShop.entity.redis.RedisToken;
 import com.example.ClothesShop.exception.AuthenticationFailedException;
 import com.example.ClothesShop.exception.InvalidTokenException;
 import com.example.ClothesShop.repository.RedisTokenRepository;

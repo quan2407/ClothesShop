@@ -1,6 +1,6 @@
 package com.example.ClothesShop.repository;
 
-import com.example.ClothesShop.entity.RedisToken;
+import com.example.ClothesShop.entity.redis.RedisToken;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 

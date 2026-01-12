@@ -28,18 +28,30 @@ import java.nio.charset.StandardCharsets;
 public class SecurityConfig {
     private final UserDetailsService userDetailsService;
     private final JwtDecoderConfiguration jwtDecoderConfiguration;
+    private final CustomJwtAuthenticationConverter customJwtAuthenticationConverter;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(authorizeRequests ->
-                        authorizeRequests
-                                .requestMatchers("/api/v1/account/register", "/api/v1/account/login","/api/v1/product").permitAll()
-                                .anyRequest().authenticated())
-                .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwtConfigurer -> jwtConfigurer.decoder(jwtDecoderConfiguration)));
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(
+                                "/api/v1/account/register",
+                                "/api/v1/account/login",
+                                "/api/v1/product"
+                        ).permitAll()
+                        .anyRequest().authenticated()
+                )
+                .oauth2ResourceServer(oauth2 ->
+                        oauth2.jwt(jwt -> jwt
+                                .decoder(jwtDecoderConfiguration)
+                                .jwtAuthenticationConverter(customJwtAuthenticationConverter)
+                        )
+                );
+
         return http.build();
     }
+
 
     @Bean
     public JwtDecoder jwtDecoder() {
