@@ -4,6 +4,8 @@ import com.example.ClothesShop.dto.request.AccountCreateRequest;
 import com.example.ClothesShop.dto.response.AccountCreateResponse;
 import com.example.ClothesShop.entity.Account;
 import com.example.ClothesShop.entity.Role;
+import com.example.ClothesShop.exception.InvalidRequestException;
+import com.example.ClothesShop.exception.NotFoundException;
 import com.example.ClothesShop.repository.AccountRepository;
 import com.example.ClothesShop.repository.RoleRepository;
 import com.example.ClothesShop.service.AccountService;
@@ -23,11 +25,11 @@ public class AccountServiceImpl implements AccountService {
     public AccountCreateResponse createAccount(AccountCreateRequest request) {
 
         if (accountRepository.existsByEmail(request.getEmail())) {
-            throw new RuntimeException("Email already exists");
+            throw new InvalidRequestException("Email already exists");
         }
 
         Role userRole = roleRepository.findByName("ROLE_USER")
-                .orElseThrow(() -> new RuntimeException("ROLE_USER not found"));
+                .orElseThrow(() -> new NotFoundException("ROLE_USER not found"));
 
         Account account = Account.builder()
                 .email(request.getEmail())
