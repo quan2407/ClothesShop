@@ -1,0 +1,19 @@
+package com.example.ClothesShop.entity.redis.cart;
+
+import lombok.*;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.redis.core.RedisHash;
+
+import java.util.List;
+
+@RedisHash("Cart")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class Cart {
+    @Id
+    private Long accountId;   // key của cart
+    private List<CartItem> items;
+}

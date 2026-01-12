@@ -1,0 +1,33 @@
+package com.example.ClothesShop.controller;
+
+import com.example.ClothesShop.dto.request.CartItemRequest;
+import com.example.ClothesShop.entity.Account;
+import com.example.ClothesShop.service.CartService;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping("/api/v1/cart")
+@RequiredArgsConstructor
+public class CartController {
+    private final CartService cartService;
+    @PostMapping("/add")
+    public ResponseEntity<?> addToCart(
+            @RequestBody @Valid CartItemRequest request,
+            @AuthenticationPrincipal Account account
+    ) {
+        cartService.addToCart(
+                account.getId(),
+                request.getSkuId(),
+                request.getQuantity()
+        );
+        return ResponseEntity.ok("Added to cart");
+    }
+
+}
