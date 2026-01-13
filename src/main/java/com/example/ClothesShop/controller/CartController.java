@@ -26,6 +26,17 @@ public class CartController {
         );
         return ResponseEntity.ok("Added to cart");
     }
+    @PutMapping("/update")
+    public ResponseEntity<?> updateQuantity(
+            @RequestBody @Valid CartItemRequest request,
+            @AuthenticationPrincipal Account account
+    ){
+        cartService.updateQuantity(
+                account.getId(),
+                request.getSkuId(),
+                request.getQuantity());
+        return ResponseEntity.ok("Updated quantity cart");
+    }
     @DeleteMapping("/{skuId}")
     public ResponseEntity<?> removeItem(
             @PathVariable Long skuId,

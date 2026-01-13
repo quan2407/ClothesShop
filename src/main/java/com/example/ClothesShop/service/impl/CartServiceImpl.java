@@ -60,6 +60,19 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
+    public void updateQuantity(Long accountId, Long skuId, int quantity) {
+        Cart cart = cartRepository.findById(accountId).orElseThrow(() -> new NotFoundException("CART NOT FOUND"));
+        SKU sku = skuRepository.findById(skuId).orElseThrow(() -> new NotFoundException("SKU NOT FOUND"));
+        if (sku.getQuantity() < quantity){
+            throw new InvalidRequestException("Not enough stock");
+        }
+        cart.getItems().forEach(item -> {
+            item.setQuantity(quantity);
+        });
+        cartRepository.save(cart);
+    }
+
+    @Override
     public void removeFromCart(Long accountId, Long skuId) {
         Cart cart = cartRepository.findById(accountId).orElseThrow(() -> new NotFoundException("CART NOT FOUND"));
         boolean removed = cart.getItems().removeIf(item -> item.getSkuId().equals(skuId));
