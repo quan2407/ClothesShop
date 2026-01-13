@@ -21,6 +21,7 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class CartServiceImpl implements CartService {
+    private static final long CART_TTL = 7 * 24 * 60 * 60; // 7 days
     private final CartRepository cartRepository;
     private final SKURepository skuRepository;
     @Override
@@ -37,6 +38,7 @@ public class CartServiceImpl implements CartService {
                 Cart.builder()
                         .accountId(accountId)
                         .items(new ArrayList<>())
+                        .timeToLive(CART_TTL)
                         .build()
         );
         // check sku exist in a cart
@@ -69,10 +71,23 @@ public class CartServiceImpl implements CartService {
         if (sku.getQuantity() < quantity){
             throw new InvalidRequestException("Not enough stock");
         }
-        cart.getItems().forEach(item -> {
-            item.setQuantity(quantity);
-        });
+        boolean found = false;
+
+        for (CartItem item : cart.getItems()) {
+            if (item.getSkuId().equals(skuId)) {
+                item.setQuantity(quantity);
+                found = true;
+                break;
+            }
+        }
+
+        if (!found) {
+            throw new InvalidRequestException("Item not found in cart");
+        }
+
+        cart.setTimeToLive(CART_TTL);
         cartRepository.save(cart);
+
     }
 
     @Override
@@ -82,6 +97,7 @@ public class CartServiceImpl implements CartService {
         if (!removed){
             throw new InvalidRequestException("Item not found in cart");
         }
+        cart.setTimeToLive(CART_TTL);
         cartRepository.save(cart);
     }
 
@@ -109,6 +125,7 @@ public class CartServiceImpl implements CartService {
                 .toList();
         int totalQuantity = cartItems.stream().mapToInt(CartItemResponse::getQuantity).sum();
         double totalAmount = cartItems.stream().mapToDouble(CartItemResponse::getPrice).sum();
+        cart.setTimeToLive(CART_TTL);
         return CartResponse.builder()
                 .items(cartItems)
                 .totalQuantity(totalQuantity)

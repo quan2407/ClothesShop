@@ -38,7 +38,7 @@ public class CartController {
                 request.getQuantity());
         return ResponseEntity.ok("Updated quantity cart");
     }
-    @DeleteMapping("/{skuId}")
+    @DeleteMapping("/remove/{skuId}")
     public ResponseEntity<?> removeItem(
             @PathVariable Long skuId,
             @AuthenticationPrincipal Account account
