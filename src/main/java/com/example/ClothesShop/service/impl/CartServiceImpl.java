@@ -58,4 +58,14 @@ public class CartServiceImpl implements CartService {
         }
         cartRepository.save(cart);
     }
+
+    @Override
+    public void removeFromCart(Long accountId, Long skuId) {
+        Cart cart = cartRepository.findById(accountId).orElseThrow(() -> new NotFoundException("CART NOT FOUND"));
+        boolean removed = cart.getItems().removeIf(item -> item.getSkuId().equals(skuId));
+        if (!removed){
+            throw new InvalidRequestException("Item not found in cart");
+        }
+        cartRepository.save(cart);
+    }
 }
