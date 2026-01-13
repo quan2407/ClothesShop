@@ -1,6 +1,7 @@
 package com.example.ClothesShop.controller;
 
 import com.example.ClothesShop.dto.request.CartItemRequest;
+import com.example.ClothesShop.dto.response.CartResponse;
 import com.example.ClothesShop.entity.Account;
 import com.example.ClothesShop.service.CartService;
 import jakarta.validation.Valid;
@@ -44,6 +45,10 @@ public class CartController {
     ) {
         cartService.removeFromCart(account.getId(), skuId);
         return ResponseEntity.ok("Removed");
+    }
+    @GetMapping
+    public ResponseEntity<CartResponse> viewCart(@AuthenticationPrincipal Account account){
+        return ResponseEntity.ok(cartService.getCart(account.getId()));
     }
 
 }

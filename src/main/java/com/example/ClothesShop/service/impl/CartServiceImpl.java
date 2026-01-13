@@ -1,5 +1,7 @@
 package com.example.ClothesShop.service.impl;
 
+import com.example.ClothesShop.dto.response.CartItemResponse;
+import com.example.ClothesShop.dto.response.CartResponse;
 import com.example.ClothesShop.entity.SKU;
 import com.example.ClothesShop.entity.redis.cart.Cart;
 import com.example.ClothesShop.entity.redis.cart.CartItem;
@@ -13,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -80,5 +83,36 @@ public class CartServiceImpl implements CartService {
             throw new InvalidRequestException("Item not found in cart");
         }
         cartRepository.save(cart);
+    }
+
+    @Override
+    public CartResponse getCart(Long accountId) {
+        Cart cart = cartRepository.findById(accountId).orElse(
+                Cart.builder()
+                        .accountId(accountId)
+                        .items(List.of())
+                        .build()
+        );
+        List<CartItemResponse> cartItems = cart.getItems()
+                .stream()
+                .map(item -> CartItemResponse.builder()
+                        .skuId(item.getSkuId())
+                        .skuCode(item.getSkuCode())
+                        .productId(item.getProductId())
+                        .productName(item.getProductName())
+                        .color(item.getColor())
+                        .size(String.valueOf(item.getSize()))
+                        .price(item.getPrice())
+                        .quantity(item.getQuantity())
+                        .totalPrice(item.getPrice() * item.getQuantity())
+                        .build())
+                .toList();
+        int totalQuantity = cartItems.stream().mapToInt(CartItemResponse::getQuantity).sum();
+        double totalAmount = cartItems.stream().mapToDouble(CartItemResponse::getPrice).sum();
+        return CartResponse.builder()
+                .items(cartItems)
+                .totalQuantity(totalQuantity)
+                .totalAmount(totalAmount)
+                .build();
     }
 }
