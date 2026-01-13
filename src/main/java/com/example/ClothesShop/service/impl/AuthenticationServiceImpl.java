@@ -7,7 +7,7 @@ import com.example.ClothesShop.entity.Account;
 import com.example.ClothesShop.entity.redis.RedisToken;
 import com.example.ClothesShop.exception.AuthenticationFailedException;
 import com.example.ClothesShop.exception.InvalidTokenException;
-import com.example.ClothesShop.repository.RedisTokenRepository;
+import com.example.ClothesShop.repository.redis.RedisTokenRepository;
 import com.example.ClothesShop.service.AuthenticationService;
 import com.example.ClothesShop.service.JwtService;
 import lombok.RequiredArgsConstructor;

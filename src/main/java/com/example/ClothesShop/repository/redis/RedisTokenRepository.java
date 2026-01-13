@@ -1,4 +1,4 @@
-package com.example.ClothesShop.repository;
+package com.example.ClothesShop.repository.redis;
 
 import com.example.ClothesShop.entity.redis.RedisToken;
 import org.springframework.data.repository.CrudRepository;

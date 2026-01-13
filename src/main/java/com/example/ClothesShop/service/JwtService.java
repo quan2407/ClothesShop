@@ -3,7 +3,7 @@ package com.example.ClothesShop.service;
 import com.example.ClothesShop.dto.JwtInfo;
 import com.example.ClothesShop.entity.Account;
 import com.example.ClothesShop.entity.redis.RedisToken;
-import com.example.ClothesShop.repository.RedisTokenRepository;
+import com.example.ClothesShop.repository.redis.RedisTokenRepository;
 import com.nimbusds.jose.*;
 import com.nimbusds.jose.crypto.MACSigner;
 import com.nimbusds.jose.crypto.MACVerifier;

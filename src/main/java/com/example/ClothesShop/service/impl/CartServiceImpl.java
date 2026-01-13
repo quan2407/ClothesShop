@@ -8,7 +8,7 @@ import com.example.ClothesShop.entity.redis.cart.CartItem;
 import com.example.ClothesShop.enums.SkuStatus;
 import com.example.ClothesShop.exception.InvalidRequestException;
 import com.example.ClothesShop.exception.NotFoundException;
-import com.example.ClothesShop.repository.CartRepository;
+import com.example.ClothesShop.repository.redis.CartRepository;
 import com.example.ClothesShop.repository.SKURepository;
 import com.example.ClothesShop.service.CartService;
 import lombok.RequiredArgsConstructor;

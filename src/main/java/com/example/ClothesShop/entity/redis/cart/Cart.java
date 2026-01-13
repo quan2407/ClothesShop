@@ -17,7 +17,6 @@ public class Cart {
     @Id
     private Long accountId;   // key của cart
     private List<CartItem> items;
-
     @TimeToLive
     private Long timeToLive;
 }
