@@ -57,6 +57,7 @@ public class CartServiceImpl implements CartService {
                             .productId(sku.getProduct().getId())
                             .productName(sku.getProduct().getName())
                             .color(sku.getColor())
+                            .price(sku.getPrice())
                             .quantity(quantity)
                             .build()
             );
@@ -124,7 +125,9 @@ public class CartServiceImpl implements CartService {
                         .build())
                 .toList();
         int totalQuantity = cartItems.stream().mapToInt(CartItemResponse::getQuantity).sum();
-        double totalAmount = cartItems.stream().mapToDouble(CartItemResponse::getPrice).sum();
+        double totalAmount = cartItems.stream()
+                .mapToDouble(CartItemResponse::getTotalPrice)
+                .sum();
         cart.setTimeToLive(CART_TTL);
         return CartResponse.builder()
                 .items(cartItems)
