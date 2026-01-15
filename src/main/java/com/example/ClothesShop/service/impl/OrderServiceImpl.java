@@ -5,10 +5,14 @@ import com.example.ClothesShop.entity.InventoryReservation;
 import com.example.ClothesShop.entity.Orders;
 import com.example.ClothesShop.entity.OrdersItem;
 import com.example.ClothesShop.enums.OrderStatus;
+import com.example.ClothesShop.exception.IllegalStateException;
 import com.example.ClothesShop.exception.NotFoundException;
 import com.example.ClothesShop.repository.OrdersRepository;
+import com.example.ClothesShop.service.InventoryReservationService;
 import com.example.ClothesShop.service.OrderService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,6 +25,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService {
     private final OrdersRepository ordersRepository;
+    private final InventoryReservationService inventoryReservationService;
     @Override
     @Transactional
     public Orders createOrder(
@@ -64,6 +69,33 @@ public class OrderServiceImpl implements OrderService {
     public Orders findByTrackingCode(String trackingCode) {
         return ordersRepository.findByTrackingOrder(trackingCode)
                 .orElseThrow(() -> new NotFoundException("Order not found"));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Page<Orders> getOrders(OrderStatus status, Pageable pageable) {
+        if (status == null) {
+            return ordersRepository.findAll(pageable);
+        }
+        return ordersRepository.findByOrderStatus(status, pageable);
+    }
+
+    @Override
+    public Orders updateOrderStatus(Long orderId, OrderStatus newStatus, String reason) {
+        Orders order  = ordersRepository.findById(orderId).orElseThrow(() -> new NotFoundException("Order not found"));
+        OrderStatus currentStatus = order.getOrderStatus();
+        if (currentStatus == OrderStatus.CANCELLED || currentStatus == OrderStatus.DELIVERED) {
+            throw new IllegalStateException("Order already finished");
+        }
+        if (currentStatus == OrderStatus.PENDING && newStatus == OrderStatus.DELIVERED) {
+            throw new IllegalStateException("Invalid order status");
+        }
+        if (newStatus == OrderStatus.CANCELLED) {
+            order.setCancelReason(reason);
+            inventoryReservationService.releaseStock(order);
+        }
+        order.setOrderStatus(newStatus);
+        return ordersRepository.save(order);
     }
 
 

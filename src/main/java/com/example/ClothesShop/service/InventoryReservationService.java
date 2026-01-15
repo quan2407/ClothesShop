@@ -1,6 +1,7 @@
 package com.example.ClothesShop.service;
 
 import com.example.ClothesShop.entity.InventoryReservation;
+import com.example.ClothesShop.entity.Orders;
 
 import java.util.List;
 
@@ -9,4 +10,6 @@ public interface InventoryReservationService {
     public void releaseExpired();
     public void cancelAllHoldByAccount(Long accountId);
     List<InventoryReservation> confirmAllByAccount(Long accountId);
+
+    void releaseStock(Orders order);
 }

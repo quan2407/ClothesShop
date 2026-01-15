@@ -37,5 +37,6 @@ public class Orders {
     private Instant modifiedDate;
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     private List<OrdersItem> items;
-
+    @Column(length = 255)
+    private String cancelReason;
 }

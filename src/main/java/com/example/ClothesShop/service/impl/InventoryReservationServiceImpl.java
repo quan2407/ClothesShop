@@ -1,8 +1,6 @@
 package com.example.ClothesShop.service.impl;
 
-import com.example.ClothesShop.entity.Account;
-import com.example.ClothesShop.entity.InventoryReservation;
-import com.example.ClothesShop.entity.SKU;
+import com.example.ClothesShop.entity.*;
 import com.example.ClothesShop.enums.ReservationStatus;
 import com.example.ClothesShop.exception.IllegalStateException;
 import com.example.ClothesShop.exception.NotFoundException;
@@ -88,4 +86,23 @@ public class InventoryReservationServiceImpl implements InventoryReservationServ
         }
         return reservations;
     }
+
+    @Override
+    @Transactional
+    public void releaseStock(Orders order) {
+        if (order == null || order.getItems() == null) {
+            return;
+        }
+        for (OrdersItem item : order.getItems()) {
+
+            SKU sku = skuRepository
+                    .findByIdForUpdate(item.getSku().getId())
+                    .orElseThrow(() -> new NotFoundException("SKU NOT FOUND"));
+
+            sku.setQuantity(
+                    sku.getQuantity() + item.getQuantity()
+            );
+        }
+    }
+
 }
