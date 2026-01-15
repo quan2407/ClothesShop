@@ -1,6 +1,8 @@
 package com.example.ClothesShop.controller;
 
 import com.example.ClothesShop.dto.request.UpdateOrderStatusRequest;
+import com.example.ClothesShop.dto.response.OrderDetailDTO;
+import com.example.ClothesShop.dto.response.OrderListDTO;
 import com.example.ClothesShop.entity.Orders;
 import com.example.ClothesShop.enums.OrderStatus;
 import com.example.ClothesShop.service.OrderService;
@@ -18,11 +20,10 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/v1/staff/orders")
 @RequiredArgsConstructor
-@PreAuthorize("hasAnyRole('STAFF','ADMIN')")
 public class OrderManagementController {
     private final OrderService orderService;
     @GetMapping
-    public ResponseEntity<Page<Orders>> getOrders(
+    public ResponseEntity<Page<OrderListDTO>> getOrders(
             @RequestParam(required = false) OrderStatus status,
             @PageableDefault(
                     size = 20,
@@ -34,6 +35,16 @@ public class OrderManagementController {
                 orderService.getOrders(status, pageable)
         );
     }
+    @GetMapping("/{orderId}")
+    @PreAuthorize("hasAnyRole('STAFF','ADMIN')")
+    public ResponseEntity<OrderDetailDTO> getOrderDetail(
+            @PathVariable Long orderId
+    ) {
+        return ResponseEntity.ok(
+                orderService.getOrderDetail(orderId)
+        );
+    }
+
     @PatchMapping("/{orderId}/status")
     public ResponseEntity<?> updateOrderStatus(
             @PathVariable Long orderId,

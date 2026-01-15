@@ -1,5 +1,8 @@
 package com.example.ClothesShop.service.impl;
 
+import com.example.ClothesShop.dto.response.OrderDetailDTO;
+import com.example.ClothesShop.dto.response.OrderItemDTO;
+import com.example.ClothesShop.dto.response.OrderListDTO;
 import com.example.ClothesShop.entity.Account;
 import com.example.ClothesShop.entity.InventoryReservation;
 import com.example.ClothesShop.entity.Orders;
@@ -73,12 +76,24 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional(readOnly = true)
-    public Page<Orders> getOrders(OrderStatus status, Pageable pageable) {
-        if (status == null) {
-            return ordersRepository.findAll(pageable);
-        }
-        return ordersRepository.findByOrderStatus(status, pageable);
+    public Page<OrderListDTO> getOrders(OrderStatus status, Pageable pageable) {
+        Page<Orders> page = (status == null)
+                ? ordersRepository.findAll(pageable)
+                : ordersRepository.findByOrderStatus(status, pageable);
+
+        return page.map(this::toListDTO);
     }
+    private OrderListDTO toListDTO(Orders o) {
+        return OrderListDTO.builder()
+                .id(o.getId())
+                .trackingOrder(o.getTrackingOrder())
+                .customerEmail(o.getAccount().getEmail())
+                .orderStatus(o.getOrderStatus())
+                .totalPrice(o.getTotalPrice())
+                .createdDate(o.getCreatedDate())
+                .build();
+    }
+
 
     @Override
     public Orders updateOrderStatus(Long orderId, OrderStatus newStatus, String reason) {
@@ -96,6 +111,41 @@ public class OrderServiceImpl implements OrderService {
         }
         order.setOrderStatus(newStatus);
         return ordersRepository.save(order);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public OrderDetailDTO getOrderDetail(Long orderId) {
+        Orders order = ordersRepository.findDetailById(orderId)
+                .orElseThrow(() -> new NotFoundException("Order not found"));
+
+        return toDetailDTO(order);
+    }
+
+    private OrderDetailDTO toDetailDTO(Orders order) {
+        return OrderDetailDTO.builder()
+                .id(order.getId())
+                .trackingOrder(order.getTrackingOrder())
+                .address(order.getAddress())
+                .phone(order.getPhone())
+                .orderStatus(order.getOrderStatus())
+                .totalPrice(order.getTotalPrice())
+                .items(
+                        order.getItems().stream()
+                                .map(this::toItemDTO)
+                                .toList()
+                )
+                .build();
+    }
+
+    private OrderItemDTO toItemDTO(OrdersItem item) {
+        return OrderItemDTO.builder()
+                .skuCode(item.getSku().getSkuCode())
+                .size(item.getSku().getClothingSize().name())
+                .color(item.getSku().getColor())
+                .quantity(item.getQuantity())
+                .price(item.getPrice())
+                .build();
     }
 
 

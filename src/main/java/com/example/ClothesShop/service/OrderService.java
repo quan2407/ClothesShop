@@ -1,5 +1,7 @@
 package com.example.ClothesShop.service;
 
+import com.example.ClothesShop.dto.response.OrderDetailDTO;
+import com.example.ClothesShop.dto.response.OrderListDTO;
 import com.example.ClothesShop.entity.Account;
 import com.example.ClothesShop.entity.InventoryReservation;
 import com.example.ClothesShop.entity.Orders;
@@ -14,7 +16,7 @@ public interface OrderService {
 
     Orders findByTrackingCode(String trackingCode);
 
-    public Page<Orders> getOrders(
+    public Page<OrderListDTO> getOrders(
             OrderStatus status,
             Pageable pageable
     );
@@ -23,4 +25,6 @@ public interface OrderService {
             OrderStatus newStatus,
             String reason
     );
+    OrderDetailDTO getOrderDetail(Long orderId);
+
 }
