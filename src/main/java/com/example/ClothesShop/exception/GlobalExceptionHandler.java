@@ -36,6 +36,13 @@ public class GlobalExceptionHandler {
     ) {
         return buildError(ex.getMessage(), HttpStatus.NOT_FOUND, request);
     }
+    @ExceptionHandler(OutOfStockException.class)
+    public ResponseEntity<ErrorResponse> handleOutOfStock(
+            OutOfStockException ex,
+            HttpServletRequest request
+    ) {
+        return buildError(ex.getMessage(), HttpStatus.BAD_REQUEST, request);
+    }
     @ExceptionHandler(InvalidRequestException.class)
     public ResponseEntity<ErrorResponse> handleBadRequest(
             InvalidRequestException ex,

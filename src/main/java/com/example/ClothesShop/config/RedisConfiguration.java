@@ -19,23 +19,4 @@ public class RedisConfiguration {
     public LettuceConnectionFactory redisConnectionFactory() {
         return new LettuceConnectionFactory(new RedisStandaloneConfiguration(host, port));
     }
-    @Bean
-    public RedisMessageListenerContainer redisMessageListenerContainer(
-            RedisConnectionFactory connectionFactory) {
-
-        RedisMessageListenerContainer container =
-                new RedisMessageListenerContainer();
-
-        container.setConnectionFactory(connectionFactory);
-        return container;
-    }
-    @Bean
-    public InitializingBean enableKeyspaceEvents(
-            RedisConnectionFactory connectionFactory) {
-
-        return () -> {
-            connectionFactory.getConnection()
-                    .setConfig("notify-keyspace-events", "Ex");
-        };
-    }
 }

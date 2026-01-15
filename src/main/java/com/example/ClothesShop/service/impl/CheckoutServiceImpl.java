@@ -1,81 +1,84 @@
 package com.example.ClothesShop.service.impl;
 
+import com.example.ClothesShop.dto.response.CheckoutReservationItem;
+import com.example.ClothesShop.dto.response.CheckoutReservationView;
+import com.example.ClothesShop.entity.InventoryReservation;
+import com.example.ClothesShop.entity.SKU;
 import com.example.ClothesShop.entity.redis.cart.Cart;
 import com.example.ClothesShop.entity.redis.cart.CartItem;
-import com.example.ClothesShop.entity.redis.checkout.CheckoutReservation;
-import com.example.ClothesShop.entity.redis.checkout.CheckoutReservationItem;
-import com.example.ClothesShop.exception.InvalidRequestException;
+import com.example.ClothesShop.enums.ReservationStatus;
 import com.example.ClothesShop.exception.NotFoundException;
+import com.example.ClothesShop.repository.InventoryReservationRepository;
 import com.example.ClothesShop.repository.redis.CartRepository;
-import com.example.ClothesShop.repository.redis.CheckoutReservationRepository;
 import com.example.ClothesShop.service.CheckoutService;
+import com.example.ClothesShop.service.InventoryReservationService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.data.redis.core.script.DefaultRedisScript;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.time.Duration;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 public class CheckoutServiceImpl implements CheckoutService {
-    private final CheckoutReservationRepository checkoutReservationRepository;
-    private final StringRedisTemplate stringRedisTemplate;
     private final CartRepository cartRepository;
-    private final DefaultRedisScript<Long> reserveStockScript;
+    private final InventoryReservationService inventoryReservationService;
+    private final InventoryReservationRepository inventoryReservationRepository;
+    @Override
+    @Transactional
+    public void checkout(Long accountId) {
+        Cart cart = cartRepository.findById(accountId).orElseThrow(() -> new NotFoundException("Cart not found"));
+        if (cart.getItems().isEmpty()) {
+            throw new NotFoundException("Cart is empty");
+        }
+        for (CartItem item : cart.getItems()) {
+            inventoryReservationService.reserve(accountId,item.getSkuId(),item.getQuantity());
+        }
+        cartRepository.deleteById(accountId);
+    }
 
     @Override
-    public String checkoutFromCart(Long accountId) {
-        Cart cart = cartRepository.findById(accountId).orElseThrow(()->new NotFoundException("Cart not found!"));
-        String reservationId = UUID.randomUUID().toString();
-
-        List<CartItem> items = cart.getItems();
-
-        List<String> stockKeys = items.stream()
-                .map(i -> "stock:sku:" + i.getSkuId())
-                .toList();
-
-        List<String> quantities = items.stream()
-                .map(i -> String.valueOf(i.getQuantity()))
-                .toList();
-
-        Long result = stringRedisTemplate.execute(
-                reserveStockScript,
-                stockKeys,
-                quantities.toArray()
-        );
-
-        if (result == null || result == -1) {
-            throw new InvalidRequestException("Một hoặc nhiều sản phẩm trong giỏ hàng đã hết hàng");
+    @Transactional(readOnly = true)
+    public CheckoutReservationView view(Long accountId) {
+        List<InventoryReservation> reservations =
+                inventoryReservationRepository.findByAccount_IdAndStatus(accountId, ReservationStatus.HOLD);
+        if (reservations.isEmpty()) {
+            throw new NotFoundException("No active checkout");
         }
+        double total = 0;
+        List<CheckoutReservationItem> items = new ArrayList<>();
+        for (InventoryReservation r : reservations) {
+            SKU sku = r.getSku();
+            double itemTotal = sku.getPrice() * r.getQuantity();
+            total += itemTotal;
 
-        CheckoutReservation checkoutReservation =
-                CheckoutReservation.builder()
-                        .reservationId(reservationId)
-                        .accountId(cart.getAccountId())
-                        .items(
-                                cart.getItems().stream()
-                                        .map(i -> CheckoutReservationItem.builder()
-                                                .skuId(i.getSkuId())
-                                                .quantity(i.getQuantity())
-                                                .productId(i.getProductId())
-                                                .skuCode(i.getSkuCode())
-                                                .price(i.getPrice())
-                                                .color(i.getColor())
-                                                .size(i.getSize())
-                                                .build()).toList()
-                        )
-                        .totalAmount(
-                                cart.getItems().stream()
-                                        .mapToDouble(i -> i.getPrice() * i.getQuantity())
-                                        .sum()
-                        )
-                        .build();
-        checkoutReservationRepository.save(checkoutReservation);
-        String shadowKey = "checkout_reservation_shadow:" + checkoutReservation.getReservationId();
-        stringRedisTemplate.opsForValue().set(shadowKey, "", Duration.ofMinutes(15));
-        return reservationId;
+            items.add(
+                    CheckoutReservationItem.builder()
+                            .reservationId(r.getId())
+                            .skuId(sku.getId())
+                            .productName(sku.getProduct().getName())
+                            .size(sku.getClothingSize().name())
+                            .color(sku.getColor())
+                            .price(sku.getPrice())
+                            .quantity(r.getQuantity())
+                            .itemTotal(itemTotal)
+                            .expireAt(r.getExpireAt())
+                            .build()
+            );
+        }
+        return CheckoutReservationView.builder()
+                .items(items)
+                .totalAmount(total)
+                .expireAt(
+                        reservations.stream()
+                                .map(InventoryReservation::getExpireAt)
+                                .min(LocalDateTime::compareTo)
+                                .orElse(null)
+                )
+                .build();
     }
+
+
 }
