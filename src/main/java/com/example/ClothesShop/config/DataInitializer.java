@@ -6,6 +6,7 @@ import com.example.ClothesShop.enums.SkuStatus;
 import com.example.ClothesShop.repository.*;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,6 +18,7 @@ import java.util.Random;
 @Component
 public class DataInitializer {
     @Bean
+    @Order(1)
     CommandLineRunner initRoles(RoleRepository roleRepo) {
         return args -> {
             if (roleRepo.findByName("ROLE_USER").isEmpty()) {
@@ -34,6 +36,7 @@ public class DataInitializer {
     }
 
     @Bean
+    @Order(2)
     @Transactional
     CommandLineRunner initData(RoleRepository roleRepo,
                                CategoryRepository categoryRepo,

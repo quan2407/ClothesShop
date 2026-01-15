@@ -4,6 +4,7 @@ import com.example.ClothesShop.entity.Account;
 import com.example.ClothesShop.entity.InventoryReservation;
 import com.example.ClothesShop.entity.SKU;
 import com.example.ClothesShop.enums.ReservationStatus;
+import com.example.ClothesShop.exception.IllegalStateException;
 import com.example.ClothesShop.exception.NotFoundException;
 import com.example.ClothesShop.exception.OutOfStockException;
 import com.example.ClothesShop.repository.AccountRepository;
@@ -66,5 +67,25 @@ public class InventoryReservationServiceImpl implements InventoryReservationServ
             sku.setQuantity(sku.getQuantity() + inventoryReservation.getQuantity());
             inventoryReservation.setStatus(ReservationStatus.CANCELLED);
         }
+    }
+
+    @Override
+    @Transactional
+    public List<InventoryReservation> confirmAllByAccount(Long accountId) {
+        List<InventoryReservation> reservations =
+                inventoryReservationRepository.findByAccount_IdAndStatus(
+                        accountId, ReservationStatus.HOLD
+                );
+        if (reservations.isEmpty()) {
+            throw new IllegalStateException("No reservations found");
+        }
+        for (InventoryReservation r : reservations) {
+            if (r.getExpireAt().isBefore(LocalDateTime.now())) {
+                throw new IllegalStateException("Expired Reservation");
+            }
+            r.setStatus(ReservationStatus.CONFIRMED);
+            r.setConfirmedAt(LocalDateTime.now());
+        }
+        return reservations;
     }
 }

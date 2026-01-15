@@ -2,16 +2,21 @@ package com.example.ClothesShop.service.impl;
 
 import com.example.ClothesShop.dto.response.CheckoutReservationItem;
 import com.example.ClothesShop.dto.response.CheckoutReservationView;
+import com.example.ClothesShop.entity.Account;
 import com.example.ClothesShop.entity.InventoryReservation;
+import com.example.ClothesShop.entity.Orders;
 import com.example.ClothesShop.entity.SKU;
 import com.example.ClothesShop.entity.redis.cart.Cart;
 import com.example.ClothesShop.entity.redis.cart.CartItem;
 import com.example.ClothesShop.enums.ReservationStatus;
 import com.example.ClothesShop.exception.NotFoundException;
+import com.example.ClothesShop.repository.AccountRepository;
 import com.example.ClothesShop.repository.InventoryReservationRepository;
 import com.example.ClothesShop.repository.redis.CartRepository;
 import com.example.ClothesShop.service.CheckoutService;
 import com.example.ClothesShop.service.InventoryReservationService;
+import com.example.ClothesShop.service.MailService;
+import com.example.ClothesShop.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,6 +31,10 @@ public class CheckoutServiceImpl implements CheckoutService {
     private final CartRepository cartRepository;
     private final InventoryReservationService inventoryReservationService;
     private final InventoryReservationRepository inventoryReservationRepository;
+    private final AccountRepository accountRepository;
+    private final OrderService orderService;
+    private final MailService mailService;
+
     @Override
     @Transactional
     public void checkout(Long accountId) {
@@ -34,7 +43,7 @@ public class CheckoutServiceImpl implements CheckoutService {
             throw new NotFoundException("Cart is empty");
         }
         for (CartItem item : cart.getItems()) {
-            inventoryReservationService.reserve(accountId,item.getSkuId(),item.getQuantity());
+            inventoryReservationService.reserve(accountId, item.getSkuId(), item.getQuantity());
         }
         cartRepository.deleteById(accountId);
     }
@@ -84,6 +93,22 @@ public class CheckoutServiceImpl implements CheckoutService {
     @Transactional
     public void cancel(Long accountId) {
         inventoryReservationService.cancelAllHoldByAccount(accountId);
+    }
+
+    @Override
+    public Orders confirm(Long accountId, String address, String phoneNumber) {
+        Account account = accountRepository.findById(accountId)
+                .orElseThrow(() -> new NotFoundException("Account not found"));
+        List<InventoryReservation> reservations =
+                inventoryReservationService.confirmAllByAccount(accountId);
+        Orders order = orderService.createOrder(
+                account,
+                reservations,
+                address,
+                phoneNumber
+        );
+        mailService.sendOrderTrackingMail(account.getEmail(), order);
+        return order;
     }
 
 

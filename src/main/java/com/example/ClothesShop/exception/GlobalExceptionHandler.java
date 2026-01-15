@@ -43,6 +43,13 @@ public class GlobalExceptionHandler {
     ) {
         return buildError(ex.getMessage(), HttpStatus.BAD_REQUEST, request);
     }
+    @ExceptionHandler(IllegalStateException.class)
+    public ResponseEntity<ErrorResponse> handleIllegalState(
+            IllegalStateException ex,
+            HttpServletRequest request
+    ) {
+        return buildError(ex.getMessage(), HttpStatus.CONFLICT, request);
+    }
     @ExceptionHandler(InvalidRequestException.class)
     public ResponseEntity<ErrorResponse> handleBadRequest(
             InvalidRequestException ex,
