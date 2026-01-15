@@ -28,4 +28,8 @@ public class CheckoutController {
     ) {
         return checkoutService.view(account.getId());
     }
+    @PostMapping("/cancel")
+    public void cancelCheckout(@AuthenticationPrincipal Account account) {
+        checkoutService.cancel(account.getId());
+    }
 }

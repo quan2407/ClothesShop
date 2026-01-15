@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -50,6 +51,20 @@ public class InventoryReservationServiceImpl implements InventoryReservationServ
             SKU sku = skuRepository.findByIdForUpdate(inventoryReservation.getSku().getId()).orElseThrow(() -> new NotFoundException("SKU NOT FOUND"));
             sku.setQuantity(sku.getQuantity() + inventoryReservation.getQuantity());
             inventoryReservation.setStatus(ReservationStatus.EXPIRED);
+        }
+    }
+
+    @Override
+    @Transactional
+    public void cancelAllHoldByAccount(Long accountId) {
+        List<InventoryReservation> reservations =
+                inventoryReservationRepository.findByAccount_IdAndStatus(
+                        accountId, ReservationStatus.HOLD
+                );
+        for (InventoryReservation inventoryReservation : reservations) {
+            SKU sku = skuRepository.findByIdForUpdate(inventoryReservation.getSku().getId()).orElseThrow(() -> new NotFoundException("SKU NOT FOUND"));
+            sku.setQuantity(sku.getQuantity() + inventoryReservation.getQuantity());
+            inventoryReservation.setStatus(ReservationStatus.CANCELLED);
         }
     }
 }
