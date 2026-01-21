@@ -18,4 +18,5 @@ public class RedisToken {
     private String jwtId;
     @TimeToLive(unit = TimeUnit.DAYS)
     private Long expiration;
+    private String type;
 }

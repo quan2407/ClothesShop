@@ -15,7 +15,7 @@ import java.util.List;
 @Builder
 public class Cart {
     @Id
-    private Long accountId;   // key của cart
+    private Long accountId;
     private List<CartItem> items;
     @TimeToLive
     private Long timeToLive;

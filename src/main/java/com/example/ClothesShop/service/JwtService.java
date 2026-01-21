@@ -22,7 +22,7 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class JwtService {
-private final RedisTokenRepository redisTokenRepository;
+    private final RedisTokenRepository redisTokenRepository;
     @Value("${jwt.secret-key}")
     private String secretKey;
 
@@ -82,14 +82,14 @@ private final RedisTokenRepository redisTokenRepository;
         SignedJWT signedJWT = SignedJWT.parse(token);
         Date expirationTime = signedJWT.getJWTClaimsSet().getExpirationTime();
         if (expirationTime.before(new Date())) {
-return false;
+            return false;
         }
         String jwtId = signedJWT.getJWTClaimsSet().getJWTID();
-       Optional<RedisToken> byId= redisTokenRepository.findById(jwtId);
-       if (byId.isPresent()) {
-           throw new RuntimeException("Token invalid");
-       }
-       return signedJWT.verify(new MACVerifier(secretKey));
+        Optional<RedisToken> byId= redisTokenRepository.findById(jwtId);
+        if (byId.isPresent()) {
+            throw new RuntimeException("Token invalid");
+        }
+        return signedJWT.verify(new MACVerifier(secretKey));
     }
 
     public JwtInfo parseToken(String token) throws ParseException {
@@ -104,4 +104,3 @@ return false;
                 .build();
     }
 }
-

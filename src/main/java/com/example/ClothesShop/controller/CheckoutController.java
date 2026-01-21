@@ -39,7 +39,8 @@ public class CheckoutController {
         Orders order = checkoutService.confirm(
                 account.getId(),
                 req.getAddress(),
-                req.getPhoneNumber()
+                req.getPhoneNumber(),
+                req.getPaymentMethod()
         );
 
         ConfirmCheckoutResponse response =

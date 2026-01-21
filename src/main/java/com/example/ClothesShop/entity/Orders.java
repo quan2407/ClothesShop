@@ -1,6 +1,8 @@
 package com.example.ClothesShop.entity;
 
 import com.example.ClothesShop.enums.OrderStatus;
+import com.example.ClothesShop.enums.PaymentMethod;
+import com.example.ClothesShop.enums.PaymentStatus;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -30,6 +32,13 @@ public class Orders {
     private String phone;
     @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private PaymentMethod paymentMethod;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private PaymentStatus paymentStatus;
     private double totalPrice;
     @CreatedDate
     private Instant createdDate;

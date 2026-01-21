@@ -8,6 +8,9 @@ import com.example.ClothesShop.entity.Orders;
 import com.example.ClothesShop.entity.SKU;
 import com.example.ClothesShop.entity.redis.cart.Cart;
 import com.example.ClothesShop.entity.redis.cart.CartItem;
+import com.example.ClothesShop.enums.OrderStatus;
+import com.example.ClothesShop.enums.PaymentMethod;
+import com.example.ClothesShop.enums.PaymentStatus;
 import com.example.ClothesShop.enums.ReservationStatus;
 import com.example.ClothesShop.exception.NotFoundException;
 import com.example.ClothesShop.repository.AccountRepository;
@@ -96,7 +99,8 @@ public class CheckoutServiceImpl implements CheckoutService {
     }
 
     @Override
-    public Orders confirm(Long accountId, String address, String phoneNumber) {
+    @Transactional
+    public Orders confirm(Long accountId, String address, String phoneNumber, PaymentMethod paymentMethod) {
         Account account = accountRepository.findById(accountId)
                 .orElseThrow(() -> new NotFoundException("Account not found"));
         List<InventoryReservation> reservations =
@@ -105,8 +109,16 @@ public class CheckoutServiceImpl implements CheckoutService {
                 account,
                 reservations,
                 address,
-                phoneNumber
+                phoneNumber,
+                paymentMethod
         );
+        if (paymentMethod == PaymentMethod.COD) {
+            order.setPaymentStatus(PaymentStatus.UNPAID);
+            order.setOrderStatus(OrderStatus.CONFIRMED);
+        } else {
+            order.setPaymentStatus(PaymentStatus.UNPAID);
+            order.setOrderStatus(OrderStatus.WAITING_FOR_PAYMENT);
+        }
         mailService.sendOrderTrackingMail(account.getEmail(), order);
         return order;
     }

@@ -8,6 +8,8 @@ import com.example.ClothesShop.entity.InventoryReservation;
 import com.example.ClothesShop.entity.Orders;
 import com.example.ClothesShop.entity.OrdersItem;
 import com.example.ClothesShop.enums.OrderStatus;
+import com.example.ClothesShop.enums.PaymentMethod;
+import com.example.ClothesShop.enums.PaymentStatus;
 import com.example.ClothesShop.exception.IllegalStateException;
 import com.example.ClothesShop.exception.NotFoundException;
 import com.example.ClothesShop.repository.OrdersRepository;
@@ -35,13 +37,13 @@ public class OrderServiceImpl implements OrderService {
             Account account,
             List<InventoryReservation> reservations,
             String address,
-            String phone
-    ) {
+            String phone,
+            PaymentMethod paymentMethod) {
 
         Orders order = Orders.builder()
                 .trackingOrder(generateTrackingOrder())
                 .account(account)
-                .orderStatus(OrderStatus.CONFIRMED)
+                .orderStatus(OrderStatus.PENDING)
                 .address(address)
                 .phone(phone)
                 .totalPrice(
@@ -51,6 +53,8 @@ public class OrderServiceImpl implements OrderService {
                                 )
                                 .sum()
                 )
+                .paymentMethod(paymentMethod)
+                .paymentStatus(PaymentStatus.UNPAID)
                 .build();
 
         List<OrdersItem> items = reservations.stream()

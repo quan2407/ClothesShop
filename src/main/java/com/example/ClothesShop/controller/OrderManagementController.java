@@ -23,6 +23,7 @@ import java.util.Map;
 public class OrderManagementController {
     private final OrderService orderService;
     @GetMapping
+    @PreAuthorize("hasAnyRole('STAFF','ADMIN')")
     public ResponseEntity<Page<OrderListDTO>> getOrders(
             @RequestParam(required = false) OrderStatus status,
             @PageableDefault(
@@ -46,6 +47,7 @@ public class OrderManagementController {
     }
 
     @PatchMapping("/{orderId}/status")
+    @PreAuthorize("hasAnyRole('STAFF','ADMIN')")
     public ResponseEntity<?> updateOrderStatus(
             @PathVariable Long orderId,
             @RequestBody UpdateOrderStatusRequest request

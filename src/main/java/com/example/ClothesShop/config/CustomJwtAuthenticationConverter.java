@@ -23,12 +23,13 @@ public class CustomJwtAuthenticationConverter
 
         Account account = accountRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("Account not found"));
+        System.out.println("Authorities: " + account.getAuthorities());
 
         return new UsernamePasswordAuthenticationToken(
                 account,                     // 👈 principal
                 null,                        // credentials (không cần)
                 account.getAuthorities()     // 👈 ROLE nằm đây
         );
+
     }
 }
-

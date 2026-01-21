@@ -37,10 +37,6 @@ public class AccountController {
         authenticationService.logout(token);
 log.info("token:{}",token);
     }
-    @GetMapping("/me")
-    public ResponseEntity<?> me(@AuthenticationPrincipal Account account) {
 
-        return ResponseEntity.ok(account.getEmail());
-    }
 
 }

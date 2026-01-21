@@ -39,10 +39,10 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                     );
 
             Account account = (Account) authentication.getPrincipal();
+            String accessToken = jwtService.generateAccessToken(account);
 
             return LoginResponse.builder()
-                    .accessToken(jwtService.generateAccessToken(account))
-                    .refreshToken(jwtService.generateRefreshToken(account))
+                    .accessToken(accessToken)
                     .build();
 
         } catch (BadCredentialsException e) {
