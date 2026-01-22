@@ -115,11 +115,11 @@ public class CheckoutServiceImpl implements CheckoutService {
         if (paymentMethod == PaymentMethod.COD) {
             order.setPaymentStatus(PaymentStatus.UNPAID);
             order.setOrderStatus(OrderStatus.CONFIRMED);
+            mailService.sendOrderTrackingMail(account.getEmail(), order);
         } else {
             order.setPaymentStatus(PaymentStatus.UNPAID);
             order.setOrderStatus(OrderStatus.WAITING_FOR_PAYMENT);
         }
-        mailService.sendOrderTrackingMail(account.getEmail(), order);
         return order;
     }
 
