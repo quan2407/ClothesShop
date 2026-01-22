@@ -1,0 +1,668 @@
+{
+  "info": {
+    "_postman_id": "508db247-b74d-4c45-937b-b7aff33402e8",
+    "name": "ClothesShop",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "38036726"
+  },
+  "item": [
+    {
+      "name": "register",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"email\": \"user1@gmail.com\",\r\n  \"password\": \"123456\"\r\n}\r\n",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/api/v1/account/register",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "v1",
+            "account",
+            "register"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "login user 1",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"email\": \"user1@gmail.com\",\r\n  \"password\": \"123456\"\r\n}\r\n",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/api/v1/account/register",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "v1",
+            "account",
+            "register"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "login user 2",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"email\": \"user1@gmail.com\",\r\n  \"password\": \"123456\"\r\n}\r\n",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/api/v1/account/register",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "v1",
+            "account",
+            "register"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "login staff",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"email\": \"user1@gmail.com\",\r\n  \"password\": \"123456\"\r\n}\r\n",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/api/v1/account/register",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "v1",
+            "account",
+            "register"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "getAllProduct",
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/api/v1/product?size=M&categoryId=1&minPrice=10&maxPrice=30&page=0&size=10",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "v1",
+            "product"
+          ],
+          "query": [
+            {
+              "key": "size",
+              "value": "M"
+            },
+            {
+              "key": "categoryId",
+              "value": "1",
+              "type": "text"
+            },
+            {
+              "key": "minPrice",
+              "value": "10",
+              "type": "text"
+            },
+            {
+              "key": "maxPrice",
+              "value": "30",
+              "type": "text"
+            },
+            {
+              "key": "page",
+              "value": "0",
+              "type": "text"
+            },
+            {
+              "key": "size",
+              "value": "10",
+              "type": "text"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "logout",
+      "request": {
+        "method": "GET",
+        "header": []
+      },
+      "response": []
+    },
+    {
+      "name": "getAllProduct",
+      "request": {
+        "method": "GET",
+        "header": []
+      },
+      "response": []
+    },
+    {
+      "name": "addToCart user 1",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c2VyMUBnbWFpbC5jb20iLCJleHAiOjE3Njg0NTA5MjYsImlhdCI6MTc2ODQ0OTEyNiwianRpIjoiNWI3NGY3MjktZTM1NC00YThlLWI1NTctMGE5NzMyYTdkNGRiIn0.Jb_JLUwRlfuyXUG94_pnV5sgGn_NDtAaOsUNhZ7Zuf0YzrCGtuXyG2zJRVPfoB9wU2ZAmiLYaq0hlFfGcz1fFw",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"skuId\": 47,\r\n  \"quantity\": 1\r\n}\r\n",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/api/v1/cart/add",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "v1",
+            "cart",
+            "add"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "addToCart user 2",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c2VyMUBnbWFpbC5jb20iLCJleHAiOjE3NjgyMTIxMzcsImlhdCI6MTc2ODIxMDMzNywianRpIjoiZTZiNTU3OTYtOWI0ZS00ODY0LWE0MjctZGFhZDIyY2E5ZjRiIn0.W3XSh64_IEoTtcmGITISN12DdH5GQ7hK4dPgCc5dCG1yL98A9DppdyjII9kflFGACi6CDqpxL38tY8OyUCNi8g",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"skuId\": 1,\r\n  \"quantity\": 2\r\n}\r\n",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/api/v1/cart/add",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "v1",
+            "cart",
+            "add"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "viewCart user 1",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c2VyMUBnbWFpbC5jb20iLCJleHAiOjE3Njg0NTA5MjYsImlhdCI6MTc2ODQ0OTEyNiwianRpIjoiNWI3NGY3MjktZTM1NC00YThlLWI1NTctMGE5NzMyYTdkNGRiIn0.Jb_JLUwRlfuyXUG94_pnV5sgGn_NDtAaOsUNhZ7Zuf0YzrCGtuXyG2zJRVPfoB9wU2ZAmiLYaq0hlFfGcz1fFw",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/api/v1/cart",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "v1",
+            "cart"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "viewCart user 2",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c2VyMUBnbWFpbC5jb20iLCJleHAiOjE3NjgyMTIxMzcsImlhdCI6MTc2ODIxMDMzNywianRpIjoiZTZiNTU3OTYtOWI0ZS00ODY0LWE0MjctZGFhZDIyY2E5ZjRiIn0.W3XSh64_IEoTtcmGITISN12DdH5GQ7hK4dPgCc5dCG1yL98A9DppdyjII9kflFGACi6CDqpxL38tY8OyUCNi8g",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"skuId\": 1,\r\n  \"quantity\": 2\r\n}\r\n",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/api/v1/cart",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "v1",
+            "cart"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "updateQuantityCart",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c2VyMUBnbWFpbC5jb20iLCJleHAiOjE3NjgyMTIxMzcsImlhdCI6MTc2ODIxMDMzNywianRpIjoiZTZiNTU3OTYtOWI0ZS00ODY0LWE0MjctZGFhZDIyY2E5ZjRiIn0.W3XSh64_IEoTtcmGITISN12DdH5GQ7hK4dPgCc5dCG1yL98A9DppdyjII9kflFGACi6CDqpxL38tY8OyUCNi8g",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "PUT",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"skuId\": 1,\r\n  \"quantity\": 2\r\n}\r\n",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/api/v1/cart/update",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "v1",
+            "cart",
+            "update"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "removeItemInCart",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c2VyMUBnbWFpbC5jb20iLCJleHAiOjE3NjgyMTIxMzcsImlhdCI6MTc2ODIxMDMzNywianRpIjoiZTZiNTU3OTYtOWI0ZS00ODY0LWE0MjctZGFhZDIyY2E5ZjRiIn0.W3XSh64_IEoTtcmGITISN12DdH5GQ7hK4dPgCc5dCG1yL98A9DppdyjII9kflFGACi6CDqpxL38tY8OyUCNi8g",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "DELETE",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"skuId\": 1,\r\n  \"quantity\": 2\r\n}\r\n",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/api/v1/cart/remove/1",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "v1",
+            "cart",
+            "remove",
+            "1"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "getSkuByProductId",
+      "request": {
+        "method": "GET",
+        "header": []
+      },
+      "response": []
+    },
+    {
+      "name": "checkout cart user 1",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c2VyMUBnbWFpbC5jb20iLCJleHAiOjE3NjgzNjAyMjgsImlhdCI6MTc2ODM1ODQyOCwianRpIjoiMmFhODRiMjQtZGFkOC00ZmJiLTk4MDgtMjRkYWE4YzA1YWVhIn0.8FBwJqUa9AcusMDesfwv34uVr24Na_WF02_d0mEQKsbivjk1gMtMl6WW7REpdMhTsH38wAB1M1dIQptqDvM8jA",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"skuId\": 1,\r\n  \"quantity\": 2\r\n}\r\n"
+        },
+        "url": {
+          "raw": "http://localhost:8080/api/v1/checkout",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "v1",
+            "checkout"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "checkout cart user 2",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c2VyMUBnbWFpbC5jb20iLCJleHAiOjE3NjgzNjAyMjgsImlhdCI6MTc2ODM1ODQyOCwianRpIjoiMmFhODRiMjQtZGFkOC00ZmJiLTk4MDgtMjRkYWE4YzA1YWVhIn0.8FBwJqUa9AcusMDesfwv34uVr24Na_WF02_d0mEQKsbivjk1gMtMl6WW7REpdMhTsH38wAB1M1dIQptqDvM8jA",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"skuId\": 1,\r\n  \"quantity\": 2\r\n}\r\n"
+        },
+        "url": {
+          "raw": "http://localhost:8080/api/v1/checkout",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "v1",
+            "checkout"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "view checkout",
+      "request": {
+        "method": "GET",
+        "header": []
+      },
+      "response": []
+    },
+    {
+      "name": "cancelCheckout",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c2VyMUBnbWFpbC5jb20iLCJleHAiOjE3Njg0NTA5MjYsImlhdCI6MTc2ODQ0OTEyNiwianRpIjoiNWI3NGY3MjktZTM1NC00YThlLWI1NTctMGE5NzMyYTdkNGRiIn0.Jb_JLUwRlfuyXUG94_pnV5sgGn_NDtAaOsUNhZ7Zuf0YzrCGtuXyG2zJRVPfoB9wU2ZAmiLYaq0hlFfGcz1fFw",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/api/v1/checkout/cancel",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "v1",
+            "checkout",
+            "cancel"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "trackOrder",
+      "request": {
+        "method": "GET",
+        "header": []
+      },
+      "response": []
+    },
+    {
+      "name": "confirm checkout",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/api/v1/checkout/confirm",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "v1",
+            "checkout",
+            "confirm"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "getOrder",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/api/v1/staff/orders",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "v1",
+            "staff",
+            "orders"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "getOrderDetail",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/api/v1/staff/orders",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "v1",
+            "staff",
+            "orders"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "updateOrderStatus",
+      "request": {
+        "method": "PATCH",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/api/v1/staff/orders/1/status",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "v1",
+            "staff",
+            "orders",
+            "1",
+            "status"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "SePay",
+      "request": {
+        "method": "GET",
+        "header": []
+      },
+      "response": []
+    }
+  ]
+}
